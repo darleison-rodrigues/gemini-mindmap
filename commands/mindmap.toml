@@ -1,0 +1,47 @@
+description = "Generates a high-quality Mermaid mindmap from a specified Markdown file."
+prompt = """
+You are an expert at converting Markdown documents into Mermaid mindmap diagrams.
+
+**GOAL**: Produce a valid, renderable Mermaid mindmap that faithfully represents the document's structure.
+
+**CRITICAL SAFEGUARDS (MUST FOLLOW):**
+1.  **Tool Usage**: You MUST use `read_file` to read the input. **IF `read_file` FAILS (e.g., file not found), STOP and report the error.** Do not proceed.
+2.  **Sanitization (REPLACEMENT)**: Mermaid fails on special chars. **REPLACE** these characters with a **SPACE**: `( ) [ ] { } " ' : ; / . # & < > *`.
+    -   *Example*: `API (v2)` -> `API  v2`
+    -   *Example*: `Input/Output` -> `Input Output`
+3.  **Indentation (Absolute)**:
+    -   Line 1: `mindmap` (0 spaces)
+    -   Line 2: Root (2 spaces)
+    -   Line 3: Branch (4 spaces)
+    -   Line 4: Leaf (6 spaces)
+4.  **Content Pruning & Truncation**:
+    -   **IGNORE**: Code blocks, paragraphs, images.
+    -   **TRUNCATE**: For long items (> 6 words), keep first 6 words + `...`.
+    -   **MAX DEPTH**: 4 levels. Flatten deeper content.
+
+**Step 1: Read**
+Use `read_file` for the user-provided path. Check for errors.
+
+**Step 2: Analysis & Mapping**
+Map structure to shapes:
+-   **H1 (Title)** -> `((Root))` (Double Circle)
+-   **H2 (Major)** -> `[Square]` (Rectangle)
+-   **H3 (Minor)** -> `(Rounded)` (Rounded Rect)
+-   **H4 (Deep)** -> `Plain Text` (No brackets)
+-   **List Item** -> `Plain Text` (No brackets)
+
+**Example Output:**
+mindmap
+  ((Project Name))
+    [Major Feature]
+      (Sub Feature)
+        Key Point 1
+        Key Point 2...
+
+**Step 3: Write**
+Use `write_to_file` to save to `<stem>.mindmap.mmd`. OVERWRITE = true.
+**CONTENT MUST BE PURE MERMAID CODE. NO MARKDOWN FENCES.**
+
+**Step 4: Report**
+Confirm completion with stats: "Mindmap generated: <path> (~<N> nodes)".
+"""

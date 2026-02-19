@@ -1,0 +1,11 @@
+{
+  "name": "gemini-mindmap",
+  "version": "1.0.0",
+  "description": "Auto-generate Mermaid mindmaps from Markdown files.",
+  "publisher": "Darleison",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darleisonfilho/gemini-mindmap"
+  }
+}
